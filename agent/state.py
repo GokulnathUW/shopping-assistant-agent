@@ -1,0 +1,1 @@
+# ShoppingState Pydantic model lives here

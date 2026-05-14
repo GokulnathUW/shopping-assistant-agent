@@ -1,5 +1,6 @@
+from config import settings
 def main():
-    print("Hello from shopping-assistant-agent!")
+    print("Setup OK!")
 
 
 if __name__ == "__main__":
