@@ -25,9 +25,9 @@ def _tavily() -> None:
 
 
 def _serpapi() -> None:
-    from serpapi import GoogleSearch
+    from serpapi import Client
 
-    GoogleSearch({"api_key": os.getenv("SERPAPI_API_KEY")})
+    Client(api_key=os.getenv("SERPAPI_API_KEY"))
 
 
 def _ollama() -> None:

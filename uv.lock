@@ -124,15 +124,6 @@ wheels = [
 ]
 
 [[package]]
-name = "google-search-results"
-version = "2.4.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "requests" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/77/30/b3a6f6a2e00f8153549c2fa345c58ae1ce8e5f3153c2fe0484d444c3abcb/google_search_results-2.4.2.tar.gz", hash = "sha256:603a30ecae2af8e600b22635757a6df275dad4b934f975e67878ccd640b78245", size = 18818, upload-time = "2023-03-10T11:13:09.953Z" }
-
-[[package]]
 name = "groq"
 version = "0.37.1"
 source = { registry = "https://pypi.org/simple" }
@@ -630,25 +621,37 @@ wheels = [
 ]
 
 [[package]]
+name = "serpapi"
+version = "1.0.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8d/19/6af9f42d372d2d0012493155f5decf0a889f434e824a6b281ab2c8f88822/serpapi-1.0.2.tar.gz", hash = "sha256:06ff981129a1cb7c3706469a67f8d43e77ab295bcbdbfcb7c118d39e8efb0783", size = 16893, upload-time = "2026-03-18T14:29:16.448Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/80/21/6b33cea480c69992813fbd36bfdb622ead6e91c6ff259ee4b1143803769d/serpapi-1.0.2-py3-none-any.whl", hash = "sha256:4edb67318918c0ff460aae118d66f76ad83ab75fbf901a77a9722b0cfe6c70aa", size = 11768, upload-time = "2026-03-18T14:29:15.515Z" },
+]
+
+[[package]]
 name = "shopping-assistant-agent"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "google-search-results" },
     { name = "httpx" },
     { name = "langchain-groq" },
     { name = "langchain-ollama" },
     { name = "python-dotenv" },
+    { name = "serpapi" },
     { name = "tavily-python" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "google-search-results" },
     { name = "httpx" },
     { name = "langchain-groq" },
     { name = "langchain-ollama" },
     { name = "python-dotenv" },
+    { name = "serpapi" },
     { name = "tavily-python" },
 ]
 
