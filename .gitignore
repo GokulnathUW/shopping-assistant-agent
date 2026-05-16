@@ -22,6 +22,10 @@ dist/
 # Logs
 *.log
 
+# Generated batch outputs (integration)
+tests/category_extraction/*.txt
+tests/source_finder/*.txt
+
 # Tests & typing
 .pytest_cache/
 .coverage

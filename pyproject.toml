@@ -5,16 +5,15 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    # Uncomment as needed:
-    # "langchain",
-    # "langgraph",
-    # "langchain-community",
+    "langchain",
+    "langgraph",
+    "langchain-community",
     "langchain-groq",
     "langchain-ollama",
     "tavily-python",
-    "google-search-results",
+    "serpapi",
     # "streamlit",
-    # "pydantic",
+    "pydantic",
     "httpx",
     "python-dotenv",
     # "mcp",
