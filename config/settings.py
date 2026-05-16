@@ -13,6 +13,10 @@ KEEPA_API_KEY = os.getenv("KEEPA_API_KEY")
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 
 # Model names
-LOCAL_MODEL_SMALL = "llama3.2:3b"
-LOCAL_MODEL_MEDIUM = "mistral:7b"
-GROQ_MODEL = "llama-3.1-70b-versatile"
+LOCAL_MODEL_SMALL = "llama3.1:8b"
+LOCAL_MODEL_MEDIUM = "llama3.1:70b"
+GROQ_MODEL_SMALL = "llama-3.1-8b-instant"    # Groq — trusted sources
+GROQ_MODEL_LARGE = "llama-3.3-70b-versatile" # Groq — synthesis only
+
+# Trusted editorial domains list (Groq → Tavily include_domains)
+TRUSTED_SOURCES_DOMAIN_COUNT_MAX = 15
