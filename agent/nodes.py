@@ -1,4 +1,3 @@
-import logging
 from typing import Any, Literal
 
 from langgraph.types import interrupt
@@ -10,8 +9,6 @@ from schemas.category_extraction import (
     CategoryNoShoppingIntent,
 )
 from services.category_extraction import extract_category
-
-logger = logging.getLogger(__name__)
 
 MAX_CLARIFICATION_ROUNDS = 2
 
@@ -56,15 +53,8 @@ def extract_category_node(state: CategoryGraphState) -> dict[str, Any]:
         }
 
     if isinstance(raw, CategoryNeedsClarification):
-        if final_attempt:
-            logger.warning(
-                "Model returned needs_clarification despite final_attempt; treating as error",
-            )
-            return {
-                "terminal": "error",
-                "error_message": "model requested clarification after max rounds",
-                "pending_questions": [],
-            }
+        # Only before clarification rounds run out. The exhausted attempt uses the
+        # force-complete system prompt (complete-only), so needs_clarification is out of policy there.
         return {
             "pending_questions": list(raw.questions),
         }

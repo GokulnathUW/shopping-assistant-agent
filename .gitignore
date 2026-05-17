@@ -12,6 +12,16 @@ env/
 .env
 .env.local
 
+# Generated diagrams
+agent_viz/
+
+# Experiments
+experiments/
+
+# Agent artifacts
+PLANNING.md
+AGENT.md
+
 # Packaging
 .Python
 build/

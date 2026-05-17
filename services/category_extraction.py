@@ -111,8 +111,6 @@ def extract_category(
         else CATEGORY_EXTRACTION_SYSTEM
     )
     reply = _extract_category(user_prompt, system_prompt=system_prompt)
-    if reply is None:
-        return None
     parsed = _parse_category(reply)
     if final_attempt and parsed is not None and not isinstance(parsed, CategoryComplete):
         logger.warning(
