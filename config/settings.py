@@ -20,3 +20,6 @@ GROQ_MODEL_LARGE = "llama-3.3-70b-versatile" # Groq — synthesis only
 
 # Trusted editorial domains list (Groq → Tavily include_domains)
 TRUSTED_SOURCES_DOMAIN_COUNT_MAX = 15
+
+# Tavily search (domain-restricted review discovery)
+TAVILY_SEARCH_MAX_RESULTS = 15

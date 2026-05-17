@@ -79,16 +79,11 @@ def fetch_trusted_sources_domains(category: str) -> list[str] | None:
     """Return 10–14 editorial domain names for Tavily ``include_domains``, or ``None`` on failure."""
 
     cat = category.strip()
-    if not cat:
-        logger.error("fetch_trusted_sources_domains: empty category")
-        return None
-
     user_prompt = TRUSTED_SOURCES_USER_TEMPLATE.format(category=cat)
-    reply = _invoke_trusted_sources_llm(user_prompt)
-    if reply is None:
-        return None
 
+    reply  = _invoke_trusted_sources_llm(user_prompt)
     parsed = _parse_trusted_sources(reply)
     if parsed is None:
         return None
+
     return list(parsed.domains)
