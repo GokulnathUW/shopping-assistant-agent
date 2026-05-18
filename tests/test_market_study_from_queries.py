@@ -1,5 +1,5 @@
-"""Batch-run category extraction against ``human_queries.txt``.
-   uv run python tests/test_category_extraction_from_queries.py
+"""Batch-run market study (Ollama) against ``market_study_queries.txt``.
+   uv run python tests/test_market_study_from_queries.py
 """
 
 from __future__ import annotations
@@ -17,19 +17,15 @@ if str(_PROJECT_ROOT) not in sys.path:
 import httpx
 
 from config.settings import LOCAL_MODEL_SMALL, OLLAMA_BASE_URL
-from schemas.category_extraction import (
-    CategoryComplete,
-    CategoryNeedsClarification,
-    CategoryNoShoppingIntent,
-)
-from services.category_extraction import extract_category
+from schemas.market_study import MarketStudyQuestions
+from services.market_study import generate_market_study_questions
 
 logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = _PROJECT_ROOT
-_CATEGORY_EXTRACTION_DIR = PROJECT_ROOT / "tests" / "category_extraction"
-QUERIES_PATH = _CATEGORY_EXTRACTION_DIR / "human_queries.txt"
-RESULTS_PATH = _CATEGORY_EXTRACTION_DIR / "category_extraction_results.txt"
+_MARKET_STUDY_DIR = PROJECT_ROOT / "tests" / "market_study"
+QUERIES_PATH = _MARKET_STUDY_DIR / "market_study_queries.txt"
+RESULTS_PATH = _MARKET_STUDY_DIR / "market_study_results.txt"
 
 
 def _ping_ollama(timeout: float = 5.0) -> bool:
@@ -50,7 +46,9 @@ def _load_rows(path: Path) -> list[tuple[str, str, str]]:
         rows: list[tuple[str, str, str]] = []
         for row in reader:
             label = (row.get("label") or "").strip()
-            query = row.get("query") or ""
+            if label.startswith("#"):
+                continue
+            query = row.get("user_query") or ""
             ctx = row.get("clarification_context") or ""
             rows.append((label, query, ctx))
         return rows
@@ -59,31 +57,31 @@ def _load_rows(path: Path) -> list[tuple[str, str, str]]:
 def _format_block(
     index: int,
     label: str,
-    query: str,
+    user_query: str,
     clarification_context: str,
-    result: CategoryComplete | CategoryNeedsClarification | CategoryNoShoppingIntent | None,
+    result: MarketStudyQuestions | None,
 ) -> str:
     ctx_display = clarification_context if clarification_context.strip() else "(empty)"
     lines = [
         "=" * 80,
         f"# case={index} label={label}",
         "=" * 80,
-        "query:",
-        query.strip(),
+        "user_query:",
+        user_query.strip(),
         "",
         "clarification_context:",
         ctx_display,
         "",
     ]
     if result is None:
-        lines.extend(["outcome: NONE (call failed, invalid JSON, or unknown status)", ""])
+        lines.extend(["outcome: NONE (call failed, invalid JSON, or validation failed)", ""])
         return "\n".join(lines)
 
     lines.extend(
         [
-            f"outcome: {result.status}",
-            "payload:",
-            json.dumps(result.model_dump(), indent=2, ensure_ascii=False),
+            "outcome: ok",
+            "market_study_questions:",
+            json.dumps(result.questions, indent=2, ensure_ascii=False),
             "",
         ]
     )
@@ -98,22 +96,29 @@ def run_batch() -> Path:
 
     if not _ping_ollama():
         sys.stderr.write(
-            f"Aborting: Ollama not reachable at {OLLAMA_BASE_URL!r}. Start Ollama and retry.\n"
+            f"Aborting: Ollama not reachable at {OLLAMA_BASE_URL!r}. Start Ollama and retry.\n",
         )
         sys.exit(1)
 
     rows = _load_rows(QUERIES_PATH)
+    if not rows:
+        sys.stderr.write(f"No data rows found in {QUERIES_PATH}\n")
+        sys.exit(1)
+
     blocks: list[str] = [
-        "category_extraction batch results",
+        "market_study batch results",
         f"model: {LOCAL_MODEL_SMALL}",
         f"queries_file: {QUERIES_PATH.relative_to(PROJECT_ROOT)}",
         "",
     ]
 
-    for i, (label, query, ctx) in enumerate(rows, start=1):
+    for i, (label, user_query, ctx) in enumerate(rows, start=1):
         logger.info("Running case %s/%s %s", i, len(rows), label)
         try:
-            parsed = extract_category(query, clarification_context=ctx)
+            parsed = generate_market_study_questions(
+                user_query,
+                clarification_context=ctx,
+            )
         except Exception:
             logger.exception("Unexpected error for label=%s", label)
             parsed = None
@@ -123,8 +128,8 @@ def run_batch() -> Path:
                         "=" * 80,
                         f"# case={i} label={label}",
                         "=" * 80,
-                        "query:",
-                        query.strip(),
+                        "user_query:",
+                        user_query.strip(),
                         "",
                         "clarification_context:",
                         ctx if ctx.strip() else "(empty)",
@@ -136,7 +141,7 @@ def run_batch() -> Path:
             )
             continue
 
-        blocks.append(_format_block(i, label, query, ctx, parsed))
+        blocks.append(_format_block(i, label, user_query, ctx, parsed))
 
     RESULTS_PATH.write_text("\n".join(blocks), encoding="utf-8")
     logger.info("Wrote %s", RESULTS_PATH)

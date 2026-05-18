@@ -35,6 +35,10 @@ dist/
 # Generated batch outputs (integration)
 tests/category_extraction/*.txt
 tests/source_finder/*.txt
+tests/market_study/market_study_results.txt
+tests/market_study/research_summarizer_output.json
+tests/market_study/research_assimilator_output.json
+tests/market_study/research_followup_output.json
 
 # Tests & typing
 .pytest_cache/

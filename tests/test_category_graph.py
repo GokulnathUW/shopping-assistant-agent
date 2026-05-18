@@ -22,6 +22,11 @@ from schemas.category_extraction import (  # noqa: E402
     CategoryNeedsClarification,
     CategoryNoShoppingIntent,
 )
+from schemas.market_study import MarketStudyQuestions  # noqa: E402
+
+
+def _stub_market_study() -> MarketStudyQuestions:
+    return MarketStudyQuestions(questions=["stub market question"])
 
 
 class CategoryGraphTests(unittest.TestCase):
@@ -47,26 +52,39 @@ class CategoryGraphTests(unittest.TestCase):
         self.assertEqual(out["terminal"], "no_shopping_intent")
 
     def test_complete_without_clarification(self) -> None:
-        with patch(
-            "agent.nodes.extract_category",
-            return_value=CategoryComplete(status="complete", category="Earbuds"),
+        with (
+            patch(
+                "agent.nodes.extract_category",
+                return_value=CategoryComplete(status="complete", category="Earbuds"),
+            ),
+            patch(
+                "agent.nodes.generate_market_study_questions",
+                return_value=_stub_market_study(),
+            ),
         ):
             graph = create_category_graph()
             out = graph.invoke({"user_query": "wireless earbuds"}, config=self.thread_config)
         self.assertEqual(out["terminal"], "complete")
         self.assertEqual(out["category_result"]["category"], "Earbuds")
+        self.assertEqual(out.get("market_study_questions"), ["stub market question"])
         self.assertNotIn("__interrupt__", out)
 
     def test_clarification_then_complete(self) -> None:
-        with patch(
-            "agent.nodes.extract_category",
-            side_effect=[
-                CategoryNeedsClarification(
-                    status="needs_clarification",
-                    questions=["In-ear or over-ear?"],
-                ),
-                CategoryComplete(status="complete", category="Over-ear headphones"),
-            ],
+        with (
+            patch(
+                "agent.nodes.extract_category",
+                side_effect=[
+                    CategoryNeedsClarification(
+                        status="needs_clarification",
+                        questions=["In-ear or over-ear?"],
+                    ),
+                    CategoryComplete(status="complete", category="Over-ear headphones"),
+                ],
+            ),
+            patch(
+                "agent.nodes.generate_market_study_questions",
+                return_value=_stub_market_study(),
+            ),
         ):
             graph = create_category_graph()
             first = graph.invoke({"user_query": "headphones"}, config=self.thread_config)
@@ -77,6 +95,7 @@ class CategoryGraphTests(unittest.TestCase):
 
         self.assertEqual(second["terminal"], "complete")
         self.assertEqual(second["clarification_rounds_completed"], 1)
+        self.assertEqual(second.get("market_study_questions"), ["stub market question"])
         ctx = second.get("clarification_context") or ""
         self.assertIn("Q: In-ear or over-ear?", ctx)
         self.assertIn("A: Over-ear", ctx)
@@ -105,10 +124,14 @@ class CategoryGraphTests(unittest.TestCase):
             return CategoryComplete(status="complete", category="Resolved")
 
         with patch("agent.nodes.extract_category", side_effect=fake_extract):
-            graph = create_category_graph()
-            graph.invoke({"user_query": "ambiguous"}, config=self.thread_config)
-            graph.invoke(Command(resume="a"), config=self.thread_config)
-            graph.invoke(Command(resume="b"), config=self.thread_config)
+            with patch(
+                "agent.nodes.generate_market_study_questions",
+                return_value=_stub_market_study(),
+            ):
+                graph = create_category_graph()
+                graph.invoke({"user_query": "ambiguous"}, config=self.thread_config)
+                graph.invoke(Command(resume="a"), config=self.thread_config)
+                graph.invoke(Command(resume="b"), config=self.thread_config)
 
         self.assertEqual(calls, [False, False, True])
 

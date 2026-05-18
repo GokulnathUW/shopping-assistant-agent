@@ -1,0 +1,15 @@
+label,user_query,clarification_context,category
+earbuds_gym,"Wireless noise-cancelling earbuds under $180, USB-C charging, good for gym and flights.",,earbuds
+monitor_home_office,"27-inch 4K IPS monitor for MacBook docking, height-adjustable stand, under $400.",,monitor
+gaming_laptop_blender,I want a Windows gaming laptop under $1500 with a dedicated GPU for Blender and Steam games.,,laptop
+sunscreen_face,"Mineral sunscreen SPF 50 for oily acne-prone face, no white cast, fragrance-free.",,sunscreen
+standing_desk,"Electric standing desk 60x30 inches, memory presets, stable at standing height.",,monitor
+mechanical_keyboard,"Hot-swappable 75% mechanical keyboard, tactile switches, programming and typing.",,keyboard
+air_purifier_bedroom,"HEPA air purifier for a 400 sq ft bedroom, quiet sleep mode, easy filter replacement.",,air purifier
+task_manager_subscription,Yearly subscription for a cross-platform task manager with offline mode and calendar sync.,,task management app
+journal_travel_physical,I'm planning to buy a journal to write down my travel stories,"Q: Are you looking for a physical paper notebook or a digital journaling app?
+A: Physical paper notebook.",paper notebook
+monitor_spreadsheets,I want a new monitor for work,"Q: Will you use it mostly for spreadsheets and email or for gaming with high refresh rate?
+A: Mostly spreadsheets and email, no gaming.",monitor
+headphones_office_anc,Looking for headphones for the office,"Q: Do you need active noise cancellation or is passive isolation enough?
+A: I need strong ANC for open-plan office.",headphones
