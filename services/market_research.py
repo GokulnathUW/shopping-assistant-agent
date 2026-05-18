@@ -1,8 +1,10 @@
 """
-Market-study research pipeline: framed questions → Tavily (trusted domains) →
-per-hit summaries → per-question dedupe → assimilator LLM → follow-up question LLM.
+Market research pipeline (after framing): framed questions → Tavily (trusted domains) →
+per-hit summaries → assimilator LLM → follow-up question LLM.
 
 Plain dict in / dict out (no pipeline-level Pydantic). Tavily still returns typed hits internally.
+
+Framing lives in ``services.market_study_framing``.
 """
 
 from __future__ import annotations
@@ -22,7 +24,7 @@ from config.settings import (
     OLLAMA_BASE_URL,
 )
 from schemas.tavily_search import TavilySearchHit
-from services.tavily_search import search_trusted_domains
+from tools.tavily import search_trusted_domains
 
 logger = logging.getLogger(__name__)
 
@@ -237,7 +239,7 @@ def generate_follow_up_questions(shopper_context: str, assimilated_brief: str) -
     return _parse_questions_json(reply) or []
 
 
-def run_market_study_research(
+def run_market_research(
     framed_questions: list[str],
     trusted_domains: list[str],
     *,

@@ -18,7 +18,7 @@ import httpx
 
 from config.settings import LOCAL_MODEL_SMALL, OLLAMA_BASE_URL
 from schemas.market_study import MarketStudyQuestions
-from services.market_study import generate_market_study_questions
+from services.market_study_framing import generate_market_study_questions
 
 logger = logging.getLogger(__name__)
 

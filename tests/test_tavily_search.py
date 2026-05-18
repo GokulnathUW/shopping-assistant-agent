@@ -5,12 +5,12 @@ from __future__ import annotations
 import unittest
 from unittest.mock import MagicMock, patch
 
-from services.tavily_search import search_trusted_domains
+from tools.tavily import search_trusted_domains
 
 
 class TestTavilySearch(unittest.TestCase):
-    @patch("services.tavily_search.TavilyClient")
-    @patch("services.tavily_search.TAVILY_API_KEY", new="fake-key")
+    @patch("tools.tavily.TavilyClient")
+    @patch("tools.tavily.TAVILY_API_KEY", new="fake-key")
     def test_search_returns_raw_content_hits(self, mock_client_cls: MagicMock) -> None:
         mock_client_cls.return_value.search.return_value = {
             "results": [
@@ -46,8 +46,8 @@ class TestTavilySearch(unittest.TestCase):
         self.assertEqual(hits[0].raw_content, " full page body ")
         self.assertEqual(hits[1].raw_content, "second body")
 
-    @patch("services.tavily_search.TavilyClient")
-    @patch("services.tavily_search.TAVILY_API_KEY", new="fake-key")
+    @patch("tools.tavily.TavilyClient")
+    @patch("tools.tavily.TAVILY_API_KEY", new="fake-key")
     def test_search_passes_empty_include_domains_list(self, mock_client_cls: MagicMock) -> None:
         mock_client_cls.return_value.search.return_value = {"results": []}
 
@@ -56,8 +56,8 @@ class TestTavilySearch(unittest.TestCase):
         call_kw = mock_client_cls.return_value.search.call_args.kwargs
         self.assertEqual(call_kw["include_domains"], [])
 
-    @patch("services.tavily_search.TavilyClient")
-    @patch("services.tavily_search.TAVILY_API_KEY", new="fake-key")
+    @patch("tools.tavily.TavilyClient")
+    @patch("tools.tavily.TAVILY_API_KEY", new="fake-key")
     def test_search_returns_empty_on_api_error(self, mock_client_cls: MagicMock) -> None:
         mock_client_cls.return_value.search.side_effect = RuntimeError("network")
 

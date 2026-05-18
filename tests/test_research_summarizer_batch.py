@@ -20,8 +20,8 @@ if str(_PROJECT_ROOT) not in sys.path:
 import httpx
 
 from config.settings import LOCAL_MODEL_SMALL, OLLAMA_BASE_URL, TAVILY_API_KEY
-from services.market_study import generate_market_study_questions
-from services.market_study_research import collect_summaries_for_framed_questions
+from services.market_research import collect_summaries_for_framed_questions
+from services.market_study_framing import generate_market_study_questions
 
 from tests.research_batch_helpers import (
     MARKET_STUDY_QUERIES_PATH,

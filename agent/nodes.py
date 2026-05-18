@@ -9,7 +9,7 @@ from schemas.category_extraction import (
     CategoryNoShoppingIntent,
 )
 from services.category_extraction import extract_category
-from services.market_study import generate_market_study_questions
+from services.market_study_framing import generate_market_study_questions
 
 MAX_CLARIFICATION_ROUNDS = 2
 

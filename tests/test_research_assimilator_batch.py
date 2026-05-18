@@ -19,7 +19,7 @@ if str(_PROJECT_ROOT) not in sys.path:
 import httpx
 
 from config.settings import LOCAL_MODEL_SMALL, OLLAMA_BASE_URL
-from services.market_study_research import assimilate_digest, build_digest_from_summarize_blocks
+from services.market_research import assimilate_digest, build_digest_from_summarize_blocks
 
 from tests.research_batch_helpers import (
     ASSIMILATOR_OUTPUT_PATH,

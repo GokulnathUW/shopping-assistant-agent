@@ -1,3 +1,8 @@
+"""Turn shopper context into Tavily-oriented analysis questions (single LLM call).
+
+See ``services.market_research`` for search, summarization, and synthesis after framing.
+"""
+
 import logging
 
 from langchain_core.exceptions import OutputParserException
