@@ -86,6 +86,11 @@ def main() -> None:
         print("terminal:", last.get("terminal"))
         if last.get("category_result"):
             pprint(last["category_result"], sort_dicts=False)
+        mqs = last.get("market_study_questions")
+        if mqs:
+            print("market_study_questions:")
+            for mq in mqs:
+                print(f"  - {mq}")
         if last.get("error_message"):
             print("error_message:", last["error_message"])
         return

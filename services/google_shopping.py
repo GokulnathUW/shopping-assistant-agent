@@ -68,8 +68,7 @@ def fetch_google_shopping_offers(
         "q": q,
         "gl": gl,
         "hl": hl,
-        "sort_by": 1, # 1 = price low to high, 2 = price high to low, 3 = relevance
-        "on_sale": "true",
+        "sort_by": "1", # 1 = price low to high, 2 = price high to low, 3 = relevance
     }
 
     if location and location.strip():
@@ -92,7 +91,7 @@ def fetch_google_shopping_offers(
 
     seen: set[str] = set()
     offers: list[GoogleShoppingOffer] = []
-    for row in raw['shopping_results']:
+    for row in raw.get('shopping_results', []):
         key = _dedupe_key(row)
         if key in seen:
             continue
