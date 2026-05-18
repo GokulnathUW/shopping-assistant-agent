@@ -14,8 +14,8 @@ class CategoryGraphState(TypedDict, total=False):
     category_result: dict[str, object]
     terminal: CategoryTerminal
     error_message: str
-    # Optional shopping constraint (SerpAPI ``max_price`` when fetching Google Shopping).
     budget_max: NotRequired[float]
+    market_study_questions: NotRequired[list[str]]
 
 
 def append_clarification_exchange(

@@ -9,10 +9,13 @@ from schemas.category_extraction import (
     CategoryNoShoppingIntent,
 )
 from services.category_extraction import extract_category
+from services.market_study import generate_market_study_questions
 
 MAX_CLARIFICATION_ROUNDS = 2
 
 
+
+############# CATEGORY EXTRACTION ##############
 def extract_category_node(state: CategoryGraphState) -> dict[str, Any]:
     user_query = state.get("user_query", "").strip()
     if not user_query:
@@ -82,7 +85,26 @@ def human_clarification_node(state: CategoryGraphState) -> dict[str, Any]:
     }
 
 
-def route_after_extract(state: CategoryGraphState) -> Literal["clarify", "finish"]:
+############# MARKET STUDY ##############
+def market_study_node(state: CategoryGraphState) -> dict[str, Any]:
+    """Ollama market study: Tavily-oriented analysis questions from shopper request + clarification."""
+
+    user_query = state.get("user_query", "").strip()
+    ctx = (state.get("clarification_context") or "").strip()
+    parsed = generate_market_study_questions(
+        user_query,
+        clarification_context=ctx,
+    )
+    if parsed is None:
+        return {"market_study_questions": []}
+    return {"market_study_questions": list(parsed.questions)}
+
+
+def route_after_extract(
+    state: CategoryGraphState,
+) -> Literal["clarify", "market_study", "end"]:
     if state.get("pending_questions"):
         return "clarify"
-    return "finish"
+    if state.get("terminal") == "complete":
+        return "market_study"
+    return "end"
