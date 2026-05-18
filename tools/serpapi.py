@@ -5,7 +5,7 @@ from serpapi import Client
 
 from config.settings import SERPAPI_API_KEY
 
-from schemas.serpapi_product_purchase import GoogleShoppingOffer
+from schemas.serpapi import GoogleShoppingOffer
 
 logger = logging.getLogger(__name__)
 

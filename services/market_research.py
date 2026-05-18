@@ -23,7 +23,7 @@ from config.settings import (
     MARKET_RESEARCH_TAVILY_MAX_RESULTS_PER_QUESTION,
     OLLAMA_BASE_URL,
 )
-from schemas.tavily_search import TavilySearchHit
+from schemas.tavily import TavilySearchHit
 from tools.tavily import search_trusted_domains
 
 logger = logging.getLogger(__name__)

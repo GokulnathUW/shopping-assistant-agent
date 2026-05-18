@@ -7,7 +7,7 @@ from config.settings import (
     TAVILY_API_KEY,
     TAVILY_SEARCH_MAX_RESULTS,
 )
-from schemas.tavily_search import TavilySearchHit
+from schemas.tavily import TavilySearchHit
 
 logger = logging.getLogger(__name__)
 
